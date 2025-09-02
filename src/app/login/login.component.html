@@ -7,8 +7,10 @@
 
     <div class="field">
       <label for="email">Email Address:- </label>
-      <input type="text" formControlName="email" class="w-full rounded-md p-2" name="email" placeholder="Type your email" />
-      <small *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+      <input type="text" formControlName="email" class="w-full rounded-md p-2" name="email"
+        placeholder="Type your email" />
+      <small
+        *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
         <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
         <div *ngIf="loginForm.get('email')?.errors?.['email']">Email should be valid</div>
       </small>
@@ -17,15 +19,22 @@
     <div class="field">
       <label for="password">Password:-</label>
       <div class="password-input">
-        <input type="{{ showPassword ? 'text' : 'password' }}" formControlName="password" class="w-full" name="password" placeholder="Type your password" />
+        <input type="{{ showPassword ? 'text' : 'password' }}" formControlName="password" class="w-full" name="password"
+          placeholder="Type your password" />
         <div class="password-icon" (click)="togglePasswordVisibility()">
           <i class="fas fa-eye"></i>
         </div>
       </div>
-      <small *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+      <small
+        *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
         <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
       </small>
     </div>
+    <div class="field">
+      <input type="checkbox" formControlName="rememberme" id="rememberme" />
+      <label for="rememberme"> Remember Me </label>
+    </div>
+
 
     <br>
     <button class="w-full" [disabled]="loginForm.invalid" type="submit">SIGN IN</button>

@@ -18,7 +18,7 @@ signup(user: { username: string, email: string, password: string, confirmpasswor
 
 
   // ✅ Login API (POST)
- login(credentials: { email: string, password: string }): Observable<any> {
+ login(credentials: { email: string, password: string, rememberme: boolean }): Observable<any> {
   return this.http.post(`${this.apiUrl}/login`, credentials);
 }
 

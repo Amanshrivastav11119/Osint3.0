@@ -16,13 +16,15 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private accountService: AccountService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      rememberme: [false]   // default unchecked
     });
+
   }
 
   togglePasswordVisibility() {
@@ -30,23 +32,22 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
-    if (this.loginForm.invalid) return;
-
-    const credentials = this.loginForm.value;
-
-    this.accountService.login(credentials).subscribe({
-      next: (res) => {
-        console.log('Login success:', res);
-        // alert('Login successful');
-        if (res.token) {
-          localStorage.setItem('token', res.token);
+    if (this.loginForm.valid) {
+      const credentials = this.loginForm.value; // { email, password, rememberme }
+      this.accountService.login(credentials).subscribe({
+        next: (res) => {
+          console.log('Login successful:', res);
+          if (credentials.rememberme) {
+            localStorage.setItem('token', res.token);  // persist token
+          } else {
+            sessionStorage.setItem('token', res.token); // session-only
+          }
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
         }
-        this.router.navigate(['/dashboard']); // navigate after login
-      },
-      error: (err) => {
-        console.error('Login error:', err);
-        alert('Invalid email or password or connection failed');
-      }
-    });
+      });
+    }
   }
+
 }
