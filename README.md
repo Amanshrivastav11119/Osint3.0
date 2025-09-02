@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # OSINT 3.0
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
@@ -21,3 +22,6 @@ node js ==> v 18.17.1
 npm ==> 9.6.7
 angular ==> 17.0.3
 "# OSINT" 
+=======
+# Osint3.0
+>>>>>>> c13671bc2982128c5e5cfcf5ab39a9fd0cbce7b0
