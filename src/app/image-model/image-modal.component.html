@@ -1,0 +1,69 @@
+<mat-dialog-content class="modal-content">
+  <!-- Left Section (Image) -->
+ <!-- Left Section (Image) -->
+<div class="modal-left">
+  <!-- Image Slider with Navigation Buttons -->
+  <div class="image-slider-container">
+    <button *ngIf="currentImageIndex !== 0" mat-icon-button class="image-slider-nav-button" (click)="prevImage()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <a [href]="data.post.post_link" target="_blank">
+      <img [src]="currentImage" alt="Image" class="image-slider-image">
+    </a>
+    <button *ngIf="currentImageIndex !== (data.post.imagehash.length - 1)" mat-icon-button class="image-slider-nav-button" (click)="nextImage()">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>
+
+  <!-- Right Section (Details) -->
+  <div class="modal-right" style="margin-left: 20px;">
+    <!-- Close Button -->
+    <button mat-mini-fab class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="right-part-1">
+      <!-- Content for the first part of the right section goes here -->
+      <div class="card-header d-flex align-items-center">
+        <img class="rounded-circle mr-2" [src]="data.post.profile_picture_link" alt="Channel Profile" width="40"
+          height="40" style="margin-right: 10px;">
+        <div class="ml-10">
+          <h3 class="mb-0 card-title">
+            <a [href]="data.post.profiler_link" target="_blank">
+              {{ data.post.title }}
+            </a>
+          </h3>
+          <!-- <p class="mb-0">{{ channel.postedDate | date:'medium' }}</p> -->
+        </div>
+      </div>
+    </div>
+    <hr>
+    <!-- Right Section - Part  (Scrollable) -->
+    <!-- Right Section - Part 2 -->
+    <div class="right-part-2  scrollable-content ">
+      <!-- Content for the third part of the right section goes here -->
+      <p>{{ data.post.description }}</p>
+      <!-- <p>{{data.fullDescription}}</p> -->
+    </div>
+    <hr>
+    <div class="right-part-3 align-items-center">
+      <div class="row">
+        <div class="col" style="flex-grow: 1;">
+          <p class="text-muted mb-0">
+            <span>&#128077;</span> Like: {{ data.post.like }}
+          </p>
+        </div>
+        <div class="col" style="flex-grow: 2;">
+          <p class="text-muted mb-0" style="word-wrap: break-word;">
+            <span>&#128172;</span> Comment: {{ data.post.comment }}
+          </p>
+        </div>
+        <div class="col" style="flex-grow: 1; text-align: right;">
+          <p class="text-muted mb-0">
+            <span>&#128230;</span> Share: {{ data.post.share }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

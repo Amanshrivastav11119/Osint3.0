@@ -1,0 +1,202 @@
+<!-- Second Toolbar -->
+<mat-toolbar-row style="height:80px;">
+  &nbsp;
+  &nbsp;
+  <div class="py-4 ">
+    <div class="container-fluid px-6">
+      <div class="row align-items-center">
+        <div class="col-xl">
+          <div class="input-group">
+            <!-- search box -->
+            <input type="text" class="form-control rounded-5 shadow transparent-bg" [class.input-highlight]="isFocused"
+              (keyup.enter)="search()" [(ngModel)]="query" [(ngModel)]="extractUrl" [(ngModel)]="connectionCountInput"
+              [(ngModel)]="username" placeholder="Enter search query" aria-label="Search Word"
+              aria-describedby="button-addon2" (focus)="onFocus()" (blur)="onBlur()" enableAutoComplete="true"
+              style="height: 50px; width: 200px;" />
+            &nbsp;
+            &nbsp;
+            <button class="btn btn-outline-secondary" type="Search" id="Search-addon2" style="height:40px; width: 40px;"
+              (click)="search()">
+              <!-- search logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search"
+                viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>
+            </button>
+            <span class="example-spacer"></span>
+            &nbsp;
+            &nbsp;
+            <mat-form-field  class="transparent-menu" style="background: transparent; height: 70px;">
+              <mat-select [(ngModel)]="selectedSearchType" placeholder="Select Search Type"
+                panelClass="transparent-panel">
+                <mat-option value="search">Search</mat-option>
+                <mat-option value="connectionCount">Connection Count</mat-option>
+                <mat-option value="profileExtractor">Profile Extractor</mat-option>
+                <mat-option value="companyDetails">Company Details</mat-option> <!-- Added this line -->
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-toolbar-row>
+
+<!-- Search Results Display -->
+<div class="container-fluid mt-2">
+  <div class="row mt-3">
+
+
+    <!-- Profile Extractor Results Display -->
+    <div *ngIf="selectedSearchType === 'profileExtractor' && extractedProfile" class="profile-container">
+      <h3 style="margin-left: 50%;">{{ getTitleForSearchType() }}</h3>
+      <!-- Profile Header Section -->
+      <div class="profile-header">
+        <div class="profile-picture">
+          <img src="{{ extractedProfile.extractor.image.contentUrl }}" alt="Profile Picture">
+        </div>
+        <div class="profile-info">
+          <h2>{{ extractedProfile.extractor.name }}</h2>
+          <p>{{ extractedProfile.extractor.jobTitle[0] }}</p>
+          <p>{{ extractedProfile.extractor.address.addressLocality }}, {{
+            extractedProfile.extractor.address.addressCountry }}</p>
+          <p>Description: {{ extractedProfile.extractor.description }}</p>
+        </div>
+      </div>
+      <!-- Education Section -->
+      <div class="education">
+        <p>Education</p>
+        <div *ngFor="let education of extractedProfile.extractor.education">
+          <h4>{{ education.school }}</h4>
+          <p>{{ education.degree }} • {{ education.duration }}</p>
+        </div>
+      </div>
+      <!-- Experience Section -->
+      <div class="experience">
+        <p>Experience</p>
+        <div *ngFor="let job of extractedProfile.extractor.worksFor">
+          <h4>{{ job.name }}</h4>
+          <p>{{ job.jobTitle }} • {{ job.duration }} • {{ job.location }}</p>
+        </div>
+      </div>
+      <!-- Skills Section -->
+      <div class="skills">
+        <p>Skills</p>
+        <div *ngFor="let skill of extractedProfile.extractor.skills">
+          <h4>{{ skill.name }}</h4>
+          <p>{{ skill.description }}</p>
+        </div>
+      </div>
+      <!-- Interests Section -->
+      <div class="interests">
+        <p>Interests</p>
+        <div *ngFor="let interest of extractedProfile.extractor.interests">
+          <img src="{{ interest.image }}" alt="{{ interest.name }}">
+          <p>{{ interest.name }} • {{ interest.description }}</p>
+          <p>{{ interest.followers }} followers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Count Results Display -->
+    <div *ngIf="selectedSearchType === 'connectionCount' && searchResultsWithConnectionCount">
+      <h3 style="margin-left: 50%;">{{ getTitleForSearchType() }}</h3>
+      <!-- Display Connection Count Profile Picture and Name -->
+      <div class="connection-profile-header">
+        <div class="profile-picture">
+          <img src="{{ searchResultsWithConnectionCount.data.profilePicture }}" alt="Profile Picture"
+            style="height: 200px; width: 200px;">
+        </div>
+        <div class="profile-name">
+          <h2>Name : - {{ searchResultsWithConnectionCount.data.firstName }} {{
+            searchResultsWithConnectionCount.data.lastName }}
+          </h2>
+        </div>
+      </div>
+      <!-- Display Connection Count Details -->
+      <div class="connection-count-details">
+        <p><strong>Connection Count:</strong> {{ searchResultsWithConnectionCount.connection }}</p>
+        <p><strong>Follower Count:</strong> {{ searchResultsWithConnectionCount.follower }}</p>
+      </div>
+      <!-- Display Connection Data -->
+      <div class="connection-data">
+        <p>Headline : -{{ searchResultsWithConnectionCount.data.headline }}</p>
+        <p>Address : -{{ searchResultsWithConnectionCount.data.geo.city }}, {{
+          searchResultsWithConnectionCount.data.geo.country }}
+        </p>
+        <p>Summary : -{{ searchResultsWithConnectionCount.data.summary }}</p>
+        <!-- Display Skills -->
+        <div class="skills">
+          <p><strong>Skills:</strong></p>
+          <ul>
+            <li *ngFor="let skill of searchResultsWithConnectionCount.data.skills">{{ skill.name }}</li>
+          </ul>
+        </div>
+        <!-- Display Education -->
+        <div class="education">
+          <p><strong>Education:</strong></p>
+          <ul>
+            <li *ngFor="let education of searchResultsWithConnectionCount.data.educations">
+              {{ education.degree }} at {{ education.school }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assuming searchResults is an array with one result -->
+    <h3 class="company-title" *ngIf="searchResults && searchResults.length > 0">{{ getTitleForSearchType() }}</h3>
+    <div *ngIf="searchResults && searchResults.length > 0" class="company-result">
+      <h1 class="company-title">{{ searchResults[0].title }}</h1>
+      <div class="company-summary">
+        <p>{{ searchResults[0].snippet }}</p>
+      </div>
+      <div class="linkedin-link">
+        <p>LinkedIn Page: <a [href]="searchResults[0].url" target="_blank">{{ searchResults[0].url }}</a></p>
+      </div>
+    </div>
+
+    <!-- Company Details Results Display -->
+    <div *ngIf="selectedSearchType === 'companyDetails' && companyDetails">
+      <h3 style="margin-left: 50%;">{{ getTitleForSearchType() }}</h3>
+
+      <!-- Display Company Details -->
+      <div class="company-details" *ngIf="companyDetails.name">
+        <p><strong>Company Name:</strong> {{ companyDetails.name }}</p>
+        <p><strong>Industry:</strong> {{ companyDetails.industries?.join(', ') }}</p>
+        <p><strong>Location:</strong> {{ companyDetails.headquarter?.city }}, {{ companyDetails.headquarter?.country }}
+        </p>
+
+        <!-- Display Image -->
+        <div *ngIf="companyDetails.images?.logo">
+          <img src="{{ companyDetails.images.logo }}" alt="Company Logo" style="max-width: 100%; max-height: 100px;">
+        </div>
+
+        <!-- Display Description -->
+        <div *ngIf="companyDetails.description">
+          <p><strong>Description:</strong> {{ companyDetails.description }}</p>
+        </div>
+
+        <!-- Display Website and Call To Action -->
+        <div *ngIf="companyDetails.website || companyDetails.callToAction">
+          <p><strong>Website:</strong> <a href="{{ companyDetails.website }}" target="_blank">{{ companyDetails.website
+              }}</a></p>
+          <div *ngIf="companyDetails.callToAction?.visible">
+            <p><strong>Call To Action:</strong> <a href="{{ companyDetails.callToAction.url }}" target="_blank">{{
+                companyDetails.callToAction.callToActionType }}</a></p>
+          </div>
+        </div>
+
+        <!-- Add more details as needed -->
+      </div>
+
+      <div *ngIf="!companyDetails.name">
+        <p>No company details available for the provided username.</p>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>

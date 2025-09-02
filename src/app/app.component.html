@@ -1,0 +1,118 @@
+<!-- navbar starts -->
+<ngx-loading-bar [includeSpinner]='false' height="4px"></ngx-loading-bar>
+<mat-toolbar class="toolbar" fxLayout="row" fxLayoutGap="10px">
+  <a class="navbar-brand">
+    <!-- logo -->
+    <img src="../assets/logo.svg" alt="Logo" width="50" height="50">
+  </a>
+  &nbsp;
+  &nbsp;
+  <!-- title -->
+  <a class="navbar-brand">
+    <span>OSINT</span>
+    &nbsp;
+  </a>
+  <span fxFlex></span>
+  <!-- menu button -->
+  <button class="dashboard" [routerLink]="['/dashboard']"
+    style="background-color: transparent; color: white;">
+    Dashboard</button>
+ &nbsp;
+  &nbsp;
+  <button class="globalsearch" [routerLink]="['/globalsearch']"
+    style="background-color: transparent; color: white;">
+    Global Search</button>
+  &nbsp;
+  &nbsp;
+  <!-- <button mat-button class="News" [matMenuTriggerFor]="News"
+    style="background-color: transparent; color: white;">
+    News</button>
+  <mat-menu #News="matMenu" class="matMenu">
+     menu items -->
+    <!-- <button mat-menu-item><a class="link" [routerLink]="['/livesearch']">Live Search</a></button> -->
+    <!-- <button mat-menu-item><a class="link" [routerLink]="['/incidentreport']">Incident Report</a></button> -->
+  <!-- </mat-menu> -->
+  <button class="Youtube" [routerLink]="['/youtube']"
+  style="background-color: transparent; color: white;">
+  Youtube</button>
+  &nbsp;
+  &nbsp;
+  <button class="News" [routerLink]="['/livesearch']"
+    style="background-color: transparent; color: white;">
+    News</button>
+  &nbsp;
+  &nbsp;
+  <button class="Flickr" [routerLink]="['/flickr']"
+    style="background-color: transparent; color: white;">
+    Flickr</button>
+  &nbsp;
+  &nbsp;
+  <button class="wikipedia" [routerLink]="['/wikipedia']"
+    style="background-color: transparent; color: white;">
+    Wikipedia</button>
+  &nbsp;
+  &nbsp;
+  <button class="google" [routerLink]="['/google']"
+    style="background-color: transparent; color: white;">
+    Google</button>
+  &nbsp;
+  &nbsp;
+  <!-- <button class="image-search" [routerLink]="['/image-search']"
+    style="background-color: transparent; color: white;">
+    Image-Search</button>
+  &nbsp;
+  &nbsp; -->
+  <button class="googletrend" [routerLink]="['/googletrend']"
+    style="background-color: transparent; color: white;">
+    Google Trends</button>
+  &nbsp;
+  &nbsp;
+  <button class="whois" [routerLink]="['/whois']"
+    style="background-color: transparent; color: white;">
+    Who-Is</button>
+  &nbsp;
+  &nbsp;
+  <!-- <button class="linkedin" [routerLink]="['/linkedin']"
+    style="background-color: transparent; color: white;">
+    Linkedin</button>
+  &nbsp;
+  &nbsp; -->
+  <button class="blockchain" [routerLink]="['/blockchain']"
+    style="background-color: transparent; color: white;">
+    Blockchain</button>
+  &nbsp;
+  &nbsp;
+  <!-- <button class="telegram" [routerLink]="['/telegram']" style="background-color: transparent; color: white;">
+      Telegram</button>
+    &nbsp;
+    &nbsp; -->
+  <!-- <button class="facebook" [routerLink]="['/facebook']"
+    style="background-color: transparent; color: white;">
+    Facebook</button>
+  &nbsp;
+  &nbsp; -->
+  <!-- <button class="elibrary" [routerLink]="['/elibrary']"
+    style="background-color: transparent; color: white;">
+    E-library</button> -->
+  <span class="example-spacer"></span>
+  <button class="fullscreen" (click)="toggleFullscreen()" style="width: 30px; height: 30px;">
+    <i class="fas fa-expand"></i>
+  </button>
+  &nbsp;
+  &nbsp;
+ <button class="login" [routerLink]="['/login']"
+    style="background-color: transparent; color: white;">
+    Login</button>
+  &nbsp;
+  &nbsp;
+   <button class="signup" [routerLink]="['/signup']"
+    style="background-color: transparent; color: white;">
+    SignUp</button>
+  &nbsp;
+  &nbsp;
+
+
+</mat-toolbar>
+
+<!-- navbar closes -->
+<router-outlet></router-outlet>

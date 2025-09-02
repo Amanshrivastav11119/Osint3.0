@@ -1,0 +1,149 @@
+<!-- second toolbox -->
+<mat-toolbar-row style="height: 80px;">
+  &nbsp;
+  &nbsp;
+  <div class="py-4">
+    <div class="container-fluid px-6">
+      <div class="row align-items-center">
+        <div class="col-xl">
+          <div class="input-group">
+            <!-- search box -->
+            <input type="text" class="form-control rounded-5 shadow transparent-bg" [class.input-highlight]="isFocused"
+              (keyup.enter)="getGoogleTrendsData()" [(ngModel)]="searchForm.value['query']" placeholder="Enter Keywords"
+              aria-label="Search Word" aria-describedby="button-addon2" (focus)="onFocus()" (blur)="onBlur()"
+              enableAutoComplete="true" />
+            &nbsp;
+            &nbsp;
+            <button class="btn btn-outline-secondary" type="button" id="Search-addon2"
+              style="height: 40px; width: 40px;" (click)="getGoogleTrendsData()">
+              <!-- search logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search"
+                viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>
+            </button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+            &nbsp;
+            <span class="example-spacer"></span>
+            <mat-menu #dataTypeMenu="matMenu" class="transparent-menu">
+              <button mat-menu-item (click)="onChangeDataTypes('TIMESERIES')">Time Series</button>
+              <button mat-menu-item (click)="onChangeDataTypes('GEO_MAP')">Geo Map</button>
+              <button mat-menu-item (click)="onChangeDataTypes('GEO_MAP_0')">Geo Map 0</button>
+              <button mat-menu-item (click)="onChangeDataTypes('RELATED_TOPICS')">Related Topics</button>
+              <button mat-menu-item (click)="onChangeDataTypes('RELATED_QUERIES')">Related Queries</button>
+            </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="dataTypeMenu">
+              {{ currentDataType || 'Select Datatype ' }}
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-toolbar-row>
+<!-- reuslts -->
+<div class="container-fluid mt-2">
+  <div class="row mt-3">
+    <div *ngIf="googleTrendsData">
+      <h2 style="margin-left: 50%;">Google Trends Data</h2>
+      <div *ngFor="let result of googleTrendsData">
+        <h3>{{ result.dataType }}</h3>
+        <!-- <pre>{{ result.data | json }}</pre> -->
+
+        <!-- Display interest_by_region in a table for GEO_MAP_0 -->
+        <div *ngIf="result.dataType === 'GEO_MAP_0'">
+          <h4>Interest by Region</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let region of result.data.interest_by_region">
+                <td>{{ region.location }}</td>
+                <td>{{ region.value }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Display timeseries data for TIMESERIES -->
+        <div *ngIf="result.dataType === 'TIMESERIES'">
+          <h4>Timeseries Data</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th *ngFor="let query of result.data.interest_over_time.averages">
+                  {{ query.query }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of result.data.interest_over_time.timeline_data">
+                <td>{{ entry.date }}</td>
+                <td *ngFor="let query of entry.values">
+                  {{ query.value }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Display interest_by_region in a table for GEO_MAP -->
+        <div *ngIf="result.dataType === 'GEO_MAP'">
+          <h4>Interest by Region</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th *ngFor="let query of getSearchQueries()">
+                  {{ query.charAt(0).toUpperCase() + query.slice(1) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let region of googleTrendsData[0].data.compared_breakdown_by_region">
+                <td>{{ region.location }}</td>
+                <td *ngFor="let query of getSearchQueries()">
+                  {{ getValueForQuery(region, query.toLowerCase()) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Display related topics -->
+        <div *ngIf="result.dataType === 'RELATED_TOPICS'">
+          <h2>Rising Topics</h2>
+          <ul *ngFor="let topic of result.data.related_topics.rising">
+            <li>
+              <strong>{{ topic.topic.title }}</strong>
+              - Value: {{ topic.value }},
+              Type: {{ topic.topic.type }},
+              Link: <a href="{{ topic.link }}" target="_blank">{{ topic.link }}</a>
+            </li>
+          </ul>
+          <h2>Top Topics</h2>
+          <ul *ngFor="let topic of result.data.related_topics.top">
+            <li>
+              <strong>{{ topic.topic.title }}</strong>
+              - Value: {{ topic.value }},
+              Type: {{ topic.topic.type }},
+              Link: <a href="{{ topic.link }}" target="_blank">{{ topic.link }}</a>
+            </li>
+          </ul>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>

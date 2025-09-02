@@ -1,0 +1,105 @@
+<!-- Second Toolbar -->
+<mat-toolbar-row style="height: 80px;">
+  &nbsp;
+  &nbsp;
+  <div class="py-4">
+    <div class="container-fluid px-6">
+      <div class="row align-items-center">
+        <div class="col-xl">
+          <div class="input-group">
+            <!-- search box -->
+            <input type="text" class="form-control rounded-5 shadow transparent-bg" [class.input-highlight]="isFocused"
+              (keyup.enter)="searchData()" [(ngModel)]="searchKeywords" placeholder="Enter search query"
+              aria-label="Search Word" aria-describedby="button-addon2" (focus)="onFocus()" (blur)="onBlur()"
+              enableAutoComplete="true" style="height: 50px; width: 200px;" />
+            &nbsp;
+            &nbsp;
+            <button class="btn btn-outline-secondary" type="Search" id="Search-addon2"
+              style="height: 40px; width: 40px;" (click)="searchData()">
+              <!-- search logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search"
+                viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>
+            </button>
+            <span class="example-spacer"></span>
+            &nbsp;
+            &nbsp;
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-toolbar-row>
+<!-- Display fetched keywords -->
+<div *ngIf="keywords.length > 0">
+  <h3>Fetched Keywords:</h3>
+  <ul>
+    <li *ngFor="let keyword of keywords; let i = index">
+      <input type="text" [(ngModel)]="keyword.search" placeholder="Edit keyword">
+      <button (click)="updateKeyword(keyword._id, keyword.search)">Update</button>
+      <!-- <button (click)="deleteKeyword(keyword._id)">Delete</button> -->
+    </li>
+  </ul>
+</div>
+
+<!-- card -->
+<div class="container-fluid mt-2 transparent-bg">
+  <div class="row mt-3">
+    <div class="col-lg-3 mt-3 mb-3" *ngFor="let item of searchResults">
+      <div class="card h-100" style="border: 1px;">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="ml-10">
+            <h5 class="mb-0 card-title">
+              <img class="rounded-circle mr-2" [src]="item.profile_picture_link" alt="Channel Profile" width="40"
+                height="40" style="margin-right: 10px;" onerror="this.onerror=null; this.src='../../assets/logo.svg';">
+
+              <a href="{{item.profiler_link}}" target="_blank">{{item.title }}</a>
+            </h5>
+          </div>
+          <div class="align-content-end">
+            <button class="close red-close" mat-button (click)="toggleSelectedArticle(item)">
+              <mat-icon *ngIf="isArticleSelected(item)">clear</mat-icon>
+              <mat-icon *ngIf="!isArticleSelected(item)">close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="card-body d-flex flex-column">
+          <div class="flex-grow-1">
+            <h5 class="card-description" style="font-size: medium;">{{ item.description }}</h5>
+          </div>
+          <!-- Image Grid -->
+          <ng-container *ngIf="item.imagehash.length === 1" >
+            <img [src]="item.imagehash[0]" alt="{{item.title }}"
+              style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"  (click)="openImageModal(item)"  >
+          </ng-container>
+          <!-- Render images in a grid if multiple images exist -->
+          <ng-container *ngIf="item.imagehash.length > 1">
+            <mat-grid-list cols="2" rowHeight="200px" gutterSize="10px">
+              <!-- Reverse the order of the array to display images from top left to bottom right -->
+              <mat-grid-tile *ngFor="let image of item.imagehash.slice(0, 4)" (click)="openImageModal(item)">
+                <img [src]="image" alt="{{item.title }}"
+                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+              </mat-grid-tile>
+            </mat-grid-list>
+          </ng-container>
+          <!-- End Image Grid -->
+        </div>
+        <div class="card-footer text-muted justify-content-between">
+          <div class="row align-items-center">
+            <div class="col">
+              <p class="text-muted mb-0">Like: {{ item.like }}</p>
+            </div>
+            <div class="col text-center">
+              <p class="text-muted mb-0">Comment: {{ item.comment }}</p>
+            </div>
+            <div class="col text-right" style="text-align: right;">
+              <p class="text-muted mb-0">Share: {{ item.share }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

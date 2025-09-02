@@ -1,0 +1,181 @@
+<!-- Second Toolbar -->
+<mat-toolbar-row style="height: 80px;">
+    &nbsp;
+    &nbsp;
+    <div class="py-4">
+        <div class="container-fluid px-6">
+            <div class="row align-items-center">
+                <div class="col-xl">
+                    <div class="input-group">
+                        <!-- search box -->
+                        <input type="text" class="form-control rounded-5 shadow transparent-bg"
+                            [class.input-highlight]="isFocused" (keyup.enter)="search()" [(ngModel)]="userInput"
+                            placeholder="Enter search query" aria-label="Search Word" aria-describedby="button-addon2"
+                            (focus)="onFocus()" (blur)="onBlur()" enableAutoComplete="true"
+                            style="height: 50px; width: 200px;" />
+                        &nbsp;
+                        &nbsp;
+                        <button class="btn btn-outline-secondary" type="Search" id="Search-addon2"
+                            style="height: 40px; width: 40px;" (click)="search()">
+                            <!-- search logo -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                        </button>
+                        <span class="example-spacer"></span>
+                        &nbsp;
+                        &nbsp;
+                        <mat-menu #functionMenu="matMenu" class="transparent-menu">
+                            <button mat-menu-item (click)="selectFunction('Multiple Address')"
+                                value="Multiple Address">Multiple Address</button>
+                            <button mat-menu-item (click)="selectFunction('Single Address')"
+                                value="Single Address">Single Address</button>
+                            <button mat-menu-item (click)="selectFunction('Single Transaction')"
+                                value="Single Transaction">Single Transaction</button>
+                            <button mat-menu-item (click)="selectFunction('Single Block')" value="Single Block">Single
+                                Block</button>
+                        </mat-menu>
+
+                        <button mat-button [matMenuTriggerFor]="functionMenu"
+                            class="btn text-bg-light p-3 py-2 btn-light border rounded-5 body-dropdown transparent-bg"
+                            style="height:40px; width: 150px;">
+                            {{ selectedFunction !== 'selectFunction' ? selectedFunction : 'Choose Function' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-toolbar-row>
+<div class="container-fluid mt-2">
+    <div class="row mt-3">
+
+        <!-- Display multiple address search results -->
+        <div *ngIf="selectedFunction === 'Multiple Address' && searchResult">
+            <!-- Add this inside your <mat-toolbar-row> -->
+            <div class="result-container">
+                <!-- Display wallet information -->
+                <div class="wallet-info">
+                    <h3 class="text-center">Wallet Information</h3>
+                    <div *ngIf="searchResult.wallet">
+                        <p>Final Balance: {{ searchResult.wallet.final_balance }}</p>
+                        <p>Total Transactions: {{ searchResult.wallet.n_tx }}</p>
+                        <p>Total Received: {{ searchResult.wallet.total_received }}</p>
+                        <p>Total Sent: {{ searchResult.wallet.total_sent }}</p>
+                        <p>Number of Transactions: {{ searchResult.wallet.n_tx }}</p>
+                    </div>
+                </div>
+                <!-- Display addresses information -->
+                <div class="addresses-info">
+                    <h3 class="text-center">Addresses</h3>
+                    <div *ngFor="let address of searchResult.addresses; let i = index">
+                        <p>Address {{ i + 1 }}:</p>
+                        <ul>
+                            <li>Address: {{ address.address }}</li>
+                            <li>Final Balance: {{ address.final_balance }}</li>
+                            <li>Number of Transactions: {{ address.n_tx }}</li>
+                            <li>Total Received: {{ address.total_received }}</li>
+                            <li>Total Sent: {{ address.total_sent }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Display general information -->
+                <div class="general-info">
+                    <h3 class="text-center">General Information</h3>
+                    <div *ngIf="searchResult.info">
+                        <p>Number of Connected Addresses: {{ searchResult.info.nconnected }}</p>
+                        <p>Conversion Rate: {{ searchResult.info.conversion }}</p>
+                    </div>
+                </div>
+                <!-- Display transaction information -->
+                <div class="transactions-info">
+                    <h3 class="text-center">Transactions</h3>
+                    <div *ngFor="let transaction of searchResult.txs">
+                        <p>Transaction ID: {{ transaction.tx_index }}</p>
+                        <p>Fee: {{ transaction.fee }}</p>
+                        <p>Balance: {{ transaction.balance }}</p>
+                        <p>Transaction Time: {{ transaction.time }} secs</p>
+                        <p>Transaction Size: {{ transaction.size }}</p>
+                        <p>Transaction Weight: {{ transaction.weight }}</p>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display single address search results -->
+        <div *ngIf="selectedFunction === 'Single Address' && searchResult">
+            <h3 class="text-center">Single Address Search Results</h3>
+            <!-- Display address information -->
+            <div *ngIf="searchResult.address">
+                <p>Address: {{ searchResult.address }}</p>
+                <p>Final Balance: {{ searchResult.final_balance }}</p>
+                <p>Block Hash: {{ searchResult.hash160 }}</p>
+                <p>Number of Transactions: {{ searchResult.n_tx }}</p>
+                <p>Total Received: {{ searchResult.total_received }}</p>
+                <p>Total Sent: {{ searchResult.total_sent }}</p>
+            </div>
+            <!-- Display list of transactions -->
+            <div *ngIf="searchResult.txs && searchResult.txs.length > 0">
+                <h4 class="text-center">List of Transactions</h4>
+                <ul>
+                    <li *ngFor="let transaction of searchResult.txs">
+                        <p>Transaction ID: {{ transaction.tx_index }}</p>
+                        <p>Fee: {{ transaction.fee }}</p>
+                        <p>Balance: {{ transaction.balance }}</p>
+                        <p>Block Height: {{ transaction.height }}</p>
+                        <p>Transaction Time: {{ transaction.time }} secs</p>
+                        <p>Transaction Size: {{ transaction.size }}</p>
+                        <p>Transaction Weight: {{ transaction.weight }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Display single transaction search results -->
+        <div *ngIf="selectedFunction === 'Single Transaction' && searchResult">
+            <h3 class="text-center">Single Transaction Search Results</h3>
+            <!-- Display transaction information -->
+            <div *ngIf="searchResult.hash">
+                <p>Block Hash: {{ searchResult.hash }}</p>
+                <p>Transaction ID: {{ searchResult.tx_index }}</p>
+                <p>Block Index: {{ searchResult.block_index }}</p>
+                <p>Block Height: {{ searchResult.block_height }}</p>
+                <p>Transaction Time: {{ searchResult.time }} secs</p>
+                <p>Transaction Size: {{ searchResult.size }}</p>
+                <p>Transaction Weight: {{ searchResult.weight }}</p>
+
+                <!-- Display information about each output -->
+                <div *ngFor="let output of searchResult.out; let i = index">
+                    <p>Output {{ i + 1 }}:</p>
+                    <ul>
+                        <li>Address: {{ output.addr }}</li>
+                        <li>Transaction Index: {{ output.tx_index }}</li>
+                        <li>Script: {{ output.script }}</li>
+                        <li>Value: {{ output.value }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display single block search results -->
+        <div *ngIf="selectedFunction === 'Single Block' && searchResult">
+            <h3 class="text-center">Single Block Search Results</h3>
+            <!-- Display block information -->
+            <div *ngIf="searchResult.hash">
+                <p>Block Hash: {{ searchResult.hash }}</p>
+                <p>Block Height: {{ searchResult.height }}</p>
+                <p>Transaction Size: {{ searchResult.size }}</p>
+                <p>Transaction No: {{ searchResult.n_tx }}</p>
+                <p>Block Index: {{ searchResult.block_index }}</p>
+                <p>Fee: {{ searchResult.fee }}</p>
+                <p>Transaction Time: {{ searchResult.time }} secs</p>
+                <p>Nonce: {{ searchResult.Nonce }}</p>
+                <p>Previous Block Hash: {{ searchResult.prev_block }}</p>
+                <p>Next Block Hash: {{ searchResult.next_block }}</p>
+            </div>
+        </div>
+    </div>
+</div>
